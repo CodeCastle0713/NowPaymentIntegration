@@ -2,7 +2,7 @@ import time
 import requests
 import os
 from dotenv import load_dotenv
-from postgre_utils import create_payment_table, insert_payment
+from sqlite import create_payment_table, insert_payment
 
 load_dotenv()
 
@@ -53,7 +53,7 @@ def get_payment_status(payment_id):
     else:
         raise Exception(f"Error: {response.status_code} - {response.text}")
 
-def poll_for_payment_status(telegram_id, amount, payment_id, check_interval=10):
+def poll_for_payment_status(telegram_id, amount, payment_id, check_interval):
     while True:
         try:
             payment_info = get_payment_status(payment_id)
@@ -81,13 +81,13 @@ if __name__ == "__main__":
     try:
         create_payment_table()
         payment_id = create_payment(
-            amount=100.0,
+            amount=150.0,
             price_currency="usd",
             pay_currency="btc",
             order_id="123456789",
         )
         
-        poll_for_payment_status("1231231232", 100, payment_id, check_interval=3)
+        poll_for_payment_status("12312312323", 150, payment_id, check_interval=3)
         
     except Exception as e:
         print(e)
